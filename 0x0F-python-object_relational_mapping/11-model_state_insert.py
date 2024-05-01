@@ -1,30 +1,21 @@
 
 #!/usr/bin/python3
-"""Add therb staet Louisiana
+""" prints the State object with the name passed as argument
 """
 import sys
 from model_state import Base, State
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy import (create_engine)
+from sqlalchemy.orm import sessionmaker
+
 
 if __name__ == "__main__":
-    username = sys.argv[1]
-    password = sys.argv[2]
-    database = sys.argv[3]
-    host = 'localhost'
-    port = 3306
-
-    db_uri = "mysql://{}:{}@{}:{}/{}".format(username, password, host,
-                                             port, database)
-    engine = create_engine(db_uri, pool_pre_ping=True)
-
+    engine = create_engine('mysql+mysqldb://{}:{}@localhost:3306/{}'
+                           .format(sys.argv[1], sys.argv[2], sys.argv[3]))
+    Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
-
-    newstate = State(name="Louisiana")
-    session.add(newstate)
+    new_state = State(name='Louisiana')
+    session.add(new_state)
+    new_instance = session.query(State).filter_by(name='Louisiana').first()
+    print(new_instance.id)
     session.commit()
-
-    print(newstate.id)
-
-    session.close()
