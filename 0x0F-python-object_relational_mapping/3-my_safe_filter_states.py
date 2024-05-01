@@ -1,28 +1,17 @@
-
 #!/usr/bin/python3
-"""
-one that is safe from MySQL injections!
-"""
-
-
+"""  Write query that matches arges but safe SQL injection """
 import MySQLdb
 import sys
 
-if __name__ == '__main__':
-    username, password, database, statename = sys.argv[1:]
 
-    statename = statename.split(' ')[0]
-
-    db = MySQLdb.connect(host="localhost", user=username,
-                         passwd="Njenga008!", db=database)
-
-    cur = db.cursor()
-
-    query = "SELECT * FROM states WHERE name LIKE BINARY %s ORDER BY id"
-
-    cur.execute(query, (statename,))
-
-    rows = cur.fetchall()
-
+if __name__ == "__main__":
+    db = MySQLdb.connect(host="localhost", user=sys.argv[1],
+                         passwd=sys.argv[2], db=sys.argv[3], port=3306)
+    c = db.cursor()
+    match = sys.argv[4]
+    c.execute("SELECT * FROM states WHERE name LIKE %s", (match, ))
+    rows = c.fetchall()
     for row in rows:
         print(row)
+    c.close()
+    db.close()
