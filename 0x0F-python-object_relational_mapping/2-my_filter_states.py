@@ -1,24 +1,17 @@
-
 #!/usr/bin/python3
-"""
-Script that lists all states as passed as arg from the
-database hbtn_0e_0_usa.
-"""
+"""  display all table in a state where name matched the arg """
 import MySQLdb
 import sys
 
 
 if __name__ == "__main__":
-    username, password, database, state_name = sys.argv[1:]
-    db = MySQLdb.connect(host='localhost', port=3306, user=username,
-                         passwd='Njenga008!', db=database)
-
-    cur = db.cursor()
-    cur.execute("SELECT * FROM states WHERE name LIKE BINARY '{}'\
-                 ORDER BY id ASC".format(state_name))
-    statess = cur.fetchall()
-
-    cur.close()
+    db = MySQLdb.connect(host="localhost", user=sys.argv[1],
+                         passwd=sys.argv[2], db=sys.argv[3], port=3306)
+    c = db.cursor()
+    c.execute("SELECT * FROM states WHERE name LIKE BINARY '{}'"
+                .format(sys.argv[4]))
+    rows = c.fetchall()
+    for row in rows:
+        print(row)
+    c.close()
     db.close()
-    for state in statess:
-        print(state)
