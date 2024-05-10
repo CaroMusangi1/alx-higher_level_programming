@@ -1,21 +1,23 @@
-#1/usr/bin/python3
+#!/usr/bin/python3
+"""Python script that takes 2 arguments in order to solve this challenge.
+The first argument is the repository name
+The second argument is the owner name
+You must use the packages requests and sys
+You are not allowed to import packages other than requests and sys
+You don’t need to check arguments passed to the script (number or type)
 """
-script that takes 2 arguments in order to solve this challenge
-"""
+
 
 import requests
 import sys
 
 
-if __name__ == '__main__':
-    url = f'https://api.github.com/repos/{sys.argv[2]}/{sys.argv[1]}/commits'
-    headers = {'Accept': 'application/vnd.github+json'}
-    r = requests.get(url, headers=headers)
-    comm = r.json()
-    try:
-        for i in range(10):
-            print("{}: {}".format(
-                comm[i].get("sha"),
-                comm[i].get("commit").get("author").get("name")))
-    except IndexError:
-        pass
+if __name__ == "__main__":
+    repo = sys.argv[1]
+    owner = sys.argv[2]
+    url = "https://api.github.com/repos/{}/{}/commits".format(owner, repo)
+    response = requests.get(url)
+    commits = response.json()
+    for commit in commits[:10]:
+        print("{}: {}".format(commit.get('sha'),
+                              commit.get('commit').get('author').get('name')))
